@@ -128,6 +128,7 @@
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Dipendente.cs" />
     <Compile Include="Models\Prenotazione.cs" />
+    <Compile Include="Models\RegistraClientePrenotazione.cs" />
     <Compile Include="Models\Servizio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -184,6 +185,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Auth\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\AggiungiUtenteEPrenotazione.cshtml" />
+    <Content Include="Views\Admin\AggiungiServizi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

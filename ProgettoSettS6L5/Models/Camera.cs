@@ -9,6 +9,6 @@ namespace ProgettoSettS6L5.Models
         [Required]
         public string Descrizione { get; set; }
         [Required]
-        public string Tipologia { get; set; }
+        public string Tipologia { get; set; } // Doppia o singola
     }
 }

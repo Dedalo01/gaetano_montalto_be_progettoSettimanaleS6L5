@@ -1,0 +1,80 @@
+﻿
+@{
+    ViewBag.Title = "AggiungiUtenteEPrenotazione";
+}
+
+@model ProgettoSettS6L5.Models.RegistraClientePrenotazione
+
+<h2>Aggiungi Utente E Prenotazione</h2>
+
+@if (TempData["IsSuccess"] != null)
+{
+    <div class="my-5 alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Successo!</strong> @TempData["IsSuccess"].
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+@using (Html.BeginForm("RegistraUtenteEPrenotazione", "Prenotazione"))
+{
+    <p>Inserisci dati del Cliente:</p>
+    <br />
+    @Html.LabelFor(model => model.Cliente.Email)
+    @Html.EditorFor(model => model.Cliente.Email)
+    <br />
+    @Html.LabelFor(model => model.Cliente.Nome)
+    @Html.EditorFor(model => model.Cliente.Nome)
+    <br />
+    @Html.LabelFor(model => model.Cliente.Cognome)
+    @Html.EditorFor(model => model.Cliente.Cognome)
+    <br />
+    @Html.LabelFor(model => model.Cliente.CodiceFiscale)
+    @Html.EditorFor(model => model.Cliente.CodiceFiscale)
+    <br />
+    @Html.LabelFor(model => model.Cliente.Citta)
+    @Html.EditorFor(model => model.Cliente.Citta)
+    <br />
+    @Html.LabelFor(model => model.Cliente.Provincia)
+    @Html.EditorFor(model => model.Cliente.Provincia)
+    <br />
+    @Html.LabelFor(model => model.Cliente.Telefono)
+    @Html.EditorFor(model => model.Cliente.Telefono)
+    <br />
+
+    <p>Inserisci dati della Prenotazione:</p>
+    <br />
+    @Html.LabelFor(model => model.Prenotazione.DataPrenotazione)
+    @Html.EditorFor(model => model.Prenotazione.DataPrenotazione, new { htmlAttributes = new { @type = "datetime-local" } })
+    @*<br />
+    @Html.LabelFor(model => model.Prenotazione.Anno)
+    @Html.EditorFor(model => model.Prenotazione.Anno)*@
+    <br />
+    @Html.LabelFor(model => model.Prenotazione.PeriodoSoggiornoInizio)
+    @Html.EditorFor(model => model.Prenotazione.PeriodoSoggiornoInizio, new { htmlAttributes = new { @type = "datetime-local" } })
+    <br />
+    @Html.LabelFor(model => model.Prenotazione.PeriodoSoggiornoFine)
+    @Html.EditorFor(model => model.Prenotazione.PeriodoSoggiornoFine, new { htmlAttributes = new { @type = "datetime-local" } })
+    <br />
+    @Html.LabelFor(model => model.Prenotazione.Caparra)
+    @Html.EditorFor(model => model.Prenotazione.Caparra)
+    <br />
+    @Html.LabelFor(model => model.Prenotazione.TariffaApplicata)
+    @Html.EditorFor(model => model.Prenotazione.TariffaApplicata)
+    <br />
+    @Html.LabelFor(model => model.Prenotazione.DettagliPrenotazione)
+    @Html.EditorFor(model => model.Prenotazione.DettagliPrenotazione)
+    <br />
+    <!-- foreach per le camere -->
+    @Html.LabelFor(model => model.Prenotazione.NumeroCameraId)
+    <select name="numeroCameraId">
+    @foreach (var camera in ViewBag.Camere)
+    {
+        <option value="@camera.IdNumeroCamera">@camera.IdNumeroCamera</option>
+    }
+    </select>
+
+    <br/>
+    <button>Registra Cliente e Prenotazione</button>
+}
+
