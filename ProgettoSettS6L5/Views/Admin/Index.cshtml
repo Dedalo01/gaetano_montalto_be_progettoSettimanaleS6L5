@@ -9,4 +9,22 @@
 
 @Html.ActionLink("Registra Utente e Prenotazione", "AggiungiUtenteEPrenotazione")
 @Html.ActionLink("Aggiungi Servizi", "AggiungiServizi")
+@Html.ActionLink("Vai al Checkout", "AggiungiServizi")
+
+<section>
+        <h3>Chekout Clienti</h3>
+
+    @using (Html.BeginForm())
+    {
+        <label for=" idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
+        <select name="idPrenotazione">
+            @foreach (var prenotazione in ViewBag.Prenotazioni)
+            {
+                <option value="@prenotazione.Id">@prenotazione.CodiceFiscaleCliente</option>
+            }
+        </select>
+
+        <button>Vai al Checkout</button>
+    }
+</section>
 

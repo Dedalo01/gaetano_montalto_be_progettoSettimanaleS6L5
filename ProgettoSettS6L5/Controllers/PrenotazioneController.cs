@@ -91,8 +91,43 @@ namespace ProgettoSettS6L5.Controllers
         }
 
         [HttpPost]
-        public ActionResult RegistraServizoPerCliente()
+        public ActionResult RegistraServizoPerCliente(Servizio servizio, int idPrenotazione, string tipoDiServizio)
         {
+            Servizio nuovoServizio = servizio;
+            nuovoServizio.PrenotazioneId = idPrenotazione;
+            nuovoServizio.Tipologia = tipoDiServizio;
+
+            string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
+            SqlConnection conn = new SqlConnection(connString);
+
+            try
+            {
+                conn.Open();
+                string insertServizioQuery = @"INSERT INTO Servizi (PrenotazioneId, Data, Quantita, Prezzo, Tipologia)
+                    VALUES (@prenotazioneId, @data, @quantita, @prezzo, @tipologia)
+                    ";
+                SqlCommand insertServizioCmd = new SqlCommand(insertServizioQuery, conn);
+                insertServizioCmd.Parameters.AddWithValue("prenotazioneId", nuovoServizio.PrenotazioneId);
+                insertServizioCmd.Parameters.AddWithValue("Data", nuovoServizio.Data);
+                insertServizioCmd.Parameters.AddWithValue("prezzo", nuovoServizio.Prezzo);
+                insertServizioCmd.Parameters.AddWithValue("quantita", nuovoServizio.Quantita);
+                insertServizioCmd.Parameters.AddWithValue("tipologia", nuovoServizio.Tipologia);
+
+                int nRowServizi = insertServizioCmd.ExecuteNonQuery();
+
+                if (nRowServizi > 0)
+                {
+                    TempData["IsSuccess"] = $"Servizio aggiunto con successo.";
+                    return RedirectToAction("AggiungiServizi", "Admin");
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally { conn.Close(); }
+
 
             return View();
         }

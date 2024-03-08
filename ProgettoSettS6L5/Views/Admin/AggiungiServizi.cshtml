@@ -1,7 +1,62 @@
 ﻿
 @{
     ViewBag.Title = "AggiungiServizi";
+
 }
+@model ProgettoSettS6L5.Models.Servizio
 
 <h2>Aggiungi Servizi al Cliente</h2>
+
+@if (TempData["IsSuccess"] != null)
+{
+    <div class="my-5 alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Successo!</strong> @TempData["IsSuccess"].
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@using (Html.BeginForm("RegistraServizoPerCliente", "Prenotazione"))
+{
+
+    <div>
+        <label for=" idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
+        <select name="idPrenotazione">
+            @foreach (var prenotazione in ViewBag.Prenotazioni)
+            {
+                <option value="@prenotazione.Id">@prenotazione.CodiceFiscaleCliente</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Tipologia)
+        <select name="tipoDiServizio">
+            <option value="Colazione in Camera">Colazione in Camera</option>
+            <option value="Bevande e Cibo Minibar">Bevande e Cibo Minibar</option>
+            <option value="Internet">Internet</option>
+            <option value="Letto Aggiuntivo">Letto Aggiuntivo</option>
+            <option value="Pernottamento con Prima Colazione">Pernottamento con Prima Colazione</option>
+            <option value="culla">culla</option>
+        </select>
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Quantita)
+        @Html.EditorFor(model => model.Quantita)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Prezzo)
+        @Html.EditorFor(model => model.Prezzo)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Data)
+        @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @type = "date" } })
+    </div>
+
+
+    <input type="submit" value="Aggiungi Servizio" class="btn btn-primary" />
+
+}
 
