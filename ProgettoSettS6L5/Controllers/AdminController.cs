@@ -51,9 +51,85 @@ namespace ProgettoSettS6L5.Controllers
 
 
         [HttpPost]
-        public ActionResult Index(int idPrenotazione)
+        public ActionResult Index(int selectIdPrenotazione)
         {
             // TODO - FARE Roba per checkout qui o in checkout!
+            // Prendi tutta prenotazione per id
+            string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
+            SqlConnection conn = new SqlConnection(connString);
+
+            Prenotazione prenotazione = new Prenotazione();
+            // List<object> serviziTotaliPerPrenotazione = new List<object>();
+            List<DettagliServizio> serviziTotaliPerPrenotazione = new List<DettagliServizio>();
+
+            try
+            {
+                conn.Open();
+
+                string selectPrenotazioneByIdQuery = "SELECT * FROM Prenotazioni WHERE Id = @id";
+                SqlCommand selectCmd = new SqlCommand(selectPrenotazioneByIdQuery, conn);
+                selectCmd.Parameters.AddWithValue("id", selectIdPrenotazione);
+
+                SqlDataReader prenotazioneReader = selectCmd.ExecuteReader();
+
+                if (prenotazioneReader.HasRows)
+                {
+                    prenotazioneReader.Read();
+                    prenotazione.Id = (int)prenotazioneReader["Id"];
+                    prenotazione.CodiceFiscaleCliente = prenotazioneReader["CodiceFiscaleCliente"].ToString();
+                    prenotazione.PeriodoSoggiornoInizio = (DateTime)prenotazioneReader["PeriodoSoggiornoInizio"];
+                    prenotazione.PeriodoSoggiornoFine = (DateTime)prenotazioneReader["PeriodoSoggiornoFine"];
+                    prenotazione.NumeroCameraId = (int)prenotazioneReader["NumeroCameraId"];
+                    prenotazione.Caparra = (decimal)prenotazioneReader["Caparra"];
+                    prenotazione.TariffaApplicata = (decimal)prenotazioneReader["TariffaApplicata"];
+
+                }
+                prenotazioneReader.Close();
+
+                string selectAllServiziByPrenotazioneIdQuery = @"SELECT PrenotazioneId, Tipologia, SUM(Quantita) AS TotaleQuantita, 
+                    SUM(Prezzo) AS TotalePrezzo
+                    FROM Servizi
+                    WHERE PrenotazioneId = @prenId
+                    GROUP BY PrenotazioneId, Tipologia
+                    ";
+                SqlCommand selectAllServiziCmd = new SqlCommand(selectAllServiziByPrenotazioneIdQuery, conn);
+                selectAllServiziCmd.Parameters.AddWithValue("prenId", selectIdPrenotazione);
+
+                SqlDataReader serviziReader = selectAllServiziCmd.ExecuteReader();
+                decimal prezzoTotaleServizi = 0;
+                if (serviziReader.HasRows)
+                {
+                    while (serviziReader.Read())
+                    {
+                        DettagliServizio servizio = new DettagliServizio()
+                        {
+                            PrenotazioneId = (int)serviziReader["PrenotazioneId"],
+                            Tipologia = (string)serviziReader["Tipologia"],
+                            TotaleQuantita = (int)serviziReader["TotaleQuantita"],
+                            TotalePrezzo = (decimal)serviziReader["TotalePrezzo"]
+                        };
+
+                        serviziTotaliPerPrenotazione.Add(servizio);
+                        prezzoTotaleServizi += (decimal)serviziReader["TotalePrezzo"];
+                    }
+                    serviziReader.Close();
+                }
+
+                int numeroTotaleGiorni = (int)(prenotazione.PeriodoSoggiornoFine - prenotazione.PeriodoSoggiornoInizio).TotalDays + 1;
+                decimal importoTotale = ((numeroTotaleGiorni * prenotazione.TariffaApplicata) - prenotazione.Caparra) + prezzoTotaleServizi;
+
+                TempData["Prenotazione"] = prenotazione;
+                TempData["ListaServizi"] = serviziTotaliPerPrenotazione;
+
+
+                return RedirectToAction("Checkout", new { importoTotale });
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
+            finally { conn.Close(); }
+
             return View();
         }
 
@@ -139,8 +215,15 @@ namespace ProgettoSettS6L5.Controllers
             return View();
         }
 
-        public ActionResult Checkout()
+        public ActionResult Checkout(decimal importoTotale)
         {
+
+            Prenotazione prenotazione = TempData["Prenotazione"] as Prenotazione;
+            List<DettagliServizio> listaServizi = TempData["ListaServizi"] as List<DettagliServizio>;
+
+            ViewBag.Prenotazione = prenotazione;
+            ViewBag.ListaServizi = listaServizi;
+            ViewBag.ImportoTotale = importoTotale;
 
             return View();
         }

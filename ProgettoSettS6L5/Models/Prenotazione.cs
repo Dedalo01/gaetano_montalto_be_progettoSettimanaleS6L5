@@ -15,7 +15,7 @@ namespace ProgettoSettS6L5.Models
         [Required]
         public int NumeroProgressivo { get; set; }
         [Required]
-        public DateTime Anno { get; set; }
+        public int Anno { get; set; }
         [Required]
         public DateTime PeriodoSoggiornoInizio { get; set; }
         [Required]

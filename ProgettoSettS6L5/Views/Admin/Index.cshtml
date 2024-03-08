@@ -9,22 +9,153 @@
 
 @Html.ActionLink("Registra Utente e Prenotazione", "AggiungiUtenteEPrenotazione")
 @Html.ActionLink("Aggiungi Servizi", "AggiungiServizi")
-@Html.ActionLink("Vai al Checkout", "AggiungiServizi")
+
 
 <section>
-        <h3>Chekout Clienti</h3>
+    <h3>Chekout Clienti</h3>
 
     @using (Html.BeginForm())
     {
-        <label for=" idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
+        <label for="idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
         <select name="idPrenotazione">
+            <option value="" data-codiceFiscale="">-- Seleziona Codice Fiscale --</option>
             @foreach (var prenotazione in ViewBag.Prenotazioni)
             {
-                <option value="@prenotazione.Id">@prenotazione.CodiceFiscaleCliente</option>
+                <option value="@prenotazione.Id" data-codiceFiscale="@prenotazione.CodiceFiscaleCliente">@prenotazione.CodiceFiscaleCliente</option>
             }
         </select>
 
-        <button>Vai al Checkout</button>
+        <label for="selectIdPrenotazione">Scegli una prenotazione:</label>
+        <select name="selectIdPrenotazione" id="selectPrenotazione">
+            <option value="">-- Seleziona Prenotazione --</option>
+        </select>
+
+        <button id="checkoutBtn">Vai al Checkout</button>
     }
 </section>
 
+<section id="dettagliPrenotazione">
+    
+</section>
+
+<section>
+    <p><strong>Totale Prenotazioni Pensione Completa:</strong> <span id="totalePrenotazioniPensioneCompleta"></span></p>
+</section>
+
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+
+            
+
+        // rilevo il cambio nella select
+        $('select[name="idPrenotazione"]').on('change', function () {
+            var idPrenotazione = $(this).val();
+            var codiceFiscale = $('option:selected', this).data('codicefiscale');
+
+            // resetto ogni volta la select
+            var selectPrenotazione = $('#selectPrenotazione');
+            selectPrenotazione.empty();
+            selectPrenotazione.append('<option value="">-- Seleziona Prenotazione --</option>');
+
+            
+
+            if (idPrenotazione == "") {
+                $('#dettagliPrenotazione').html("");
+                
+            } else {
+
+      // sparo la fetch
+            $.ajax({
+                url: '@Url.Action("GetAllPrenotazioniByCodiceFiscale", "Prenotazione")',
+                type: 'POST',
+                data: { codiceFiscale: codiceFiscale },
+                success: function (data) {
+                    // Creo struttura tabella
+                   var dettagliPrenotazioneHtml = `
+                        <table class="table table-striped my-4">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Codice Fiscale</th>
+                                    <th>Data Prenotazione</th>
+                                    <th>Da</th>
+                                    <th>A</th>
+                                    <th>Caparra</th>
+                                    <th>Tariffa Giornaliera</th>
+                                    <th>Dettaglio Prenotazione</th>
+                                    <th>Numero Camera</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                        `;
+
+                        // popolo tabella e select
+                    $.each(data, function (index, prenotazione) {
+                        console.log(prenotazione.DataPrenotazione)
+                        var timestampPrenotazione = parseInt(prenotazione.DataPrenotazione.match(/\d+/)[0], 10);
+                        var timestampInizio = parseInt(prenotazione.PeriodoSoggiornoInizio.match(/\d+/)[0], 10);
+                        var timestampFine = parseInt(prenotazione.PeriodoSoggiornoFine.match(/\d+/)[0], 10);
+
+                        var dataPrenotazione = new Date(timestampPrenotazione)
+                        var dataInizio = new Date(timestampInizio)
+                        var dataFine = new Date(timestampFine)
+
+                        dettagliPrenotazioneHtml += `
+                        <tr>
+                            <td>${prenotazione.Id}</td>
+                            <td>${prenotazione.CodiceFicaleCliente}</td>
+                            <td>${dataPrenotazione.toLocaleDateString("it-IT") }</td>
+                            <td>${dataInizio.toLocaleDateString("it-IT") }</td>
+                            <td>${dataFine.toLocaleDateString("it-IT") }</td>
+                            <td>${prenotazione.Caparra}</td>
+                            <td>${prenotazione.TariffaApplicata}</td>
+                            <td>${prenotazione.DettagliPrenotazione}</td>
+                            <td>${prenotazione.NumeroCameraId}</td>
+                        </tr>`
+
+                        // popolo la select
+                        selectPrenotazione.append(`<option value="${prenotazione.Id}">${prenotazione.Id} - ${prenotazione.DettagliPrenotazione} - ${dataPrenotazione.toLocaleDateString("it-IT")}</option>`);
+
+
+                    });
+
+                    dettagliPrenotazioneHtml += '</tbody></table>';
+
+                    // Aggiorno la section
+                    $('#dettagliPrenotazione').html(dettagliPrenotazioneHtml);
+                    
+                    
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+
+            }
+            });
+
+
+             // recupero totale prenotazioni pensione completa
+
+     // Esegui la richiesta AJAX
+     $.ajax({
+         url: '@Url.Action("GetTotalePrenotazioniPensioneCompleta", "Prenotazione")',
+         type: 'GET',
+         dataType: 'json',
+         success: function (data) {
+             // Manipola il valore restituito, ad esempio, aggiornando un elemento HTML
+             $('#totalePrenotazioniPensioneCompleta').text(data);
+         },
+         error: function (error) {
+             console.error(error);
+         }
+     });
+    });
+
+
+
+    </script>
+}

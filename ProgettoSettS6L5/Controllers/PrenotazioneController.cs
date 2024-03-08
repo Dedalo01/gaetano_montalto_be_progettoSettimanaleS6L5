@@ -1,5 +1,6 @@
 ﻿using ProgettoSettS6L5.Models;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Web.Mvc;
@@ -130,6 +131,77 @@ namespace ProgettoSettS6L5.Controllers
 
 
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult GetAllPrenotazioniByCodiceFiscale(string codiceFiscale)
+        {
+            string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
+            SqlConnection conn = new SqlConnection(connString);
+            List<Prenotazione> prenotazioni = new List<Prenotazione>();
+            try
+            {
+                conn.Open();
+
+                string selectAllPrenotazioniByCodiceFiscaleQuery = "SELECT * FROM Prenotazioni WHERE CodiceFiscaleCliente = @codFisCliente";
+                SqlCommand selectAllPrenotazioniCmd = new SqlCommand(selectAllPrenotazioniByCodiceFiscaleQuery, conn);
+                selectAllPrenotazioniCmd.Parameters.AddWithValue("codFisCliente", codiceFiscale);
+
+                SqlDataReader selectReader = selectAllPrenotazioniCmd.ExecuteReader();
+
+                if (selectReader.HasRows)
+                {
+                    while (selectReader.Read())
+                    {
+                        Prenotazione prenotazione = new Prenotazione();
+                        prenotazione.Id = (int)selectReader["Id"];
+                        prenotazione.CodiceFiscaleCliente = (string)selectReader["CodiceFiscaleCliente"];
+                        prenotazione.DataPrenotazione = (DateTime)selectReader["DataPrenotazione"];
+                        prenotazione.NumeroProgressivo = (int)selectReader["NumeroProgressivo"];
+                        prenotazione.PeriodoSoggiornoInizio = (DateTime)selectReader["PeriodoSoggiornoInizio"];
+                        prenotazione.PeriodoSoggiornoFine = (DateTime)selectReader["PeriodoSoggiornoFine"];
+                        prenotazione.Caparra = (decimal)selectReader["Caparra"];
+                        prenotazione.TariffaApplicata = (decimal)selectReader["TariffaApplicata"];
+                        prenotazione.DettagliPrenotazione = (string)selectReader["DettagliPrenotazione"];
+                        prenotazione.NumeroCameraId = (int)selectReader["NumeroCameraId"];
+                        prenotazione.Anno = (int)selectReader["Anno"];
+
+                        prenotazioni.Add(prenotazione);
+                    }
+                    selectReader.Close();
+                }
+
+
+            }
+            catch (Exception ex) { }
+            finally { conn.Close(); }
+
+            return Json(prenotazioni, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetTotalePrenotazioniPensioneCompleta()
+        {
+            string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
+            SqlConnection conn = new SqlConnection(connString);
+            int totalePrenotazioniPensioneCompleta = 0;
+            try
+            {
+                conn.Open();
+
+                string findTotalQuery = @"
+                SELECT COUNT(*) AS TotalePrenotazioni
+                FROM Prenotazioni
+                WHERE DettagliPrenotazione = 'Pensione Completa'
+                GROUP BY DettagliPrenotazione
+                ";
+
+                SqlCommand findTotalCmd = new SqlCommand(findTotalQuery, conn);
+                totalePrenotazioniPensioneCompleta = (int)findTotalCmd.ExecuteScalar();
+            }
+            catch (Exception ex) { }
+            finally { conn.Close(); }
+
+            return Json(totalePrenotazioniPensioneCompleta, JsonRequestBehavior.AllowGet);
         }
     }
 }
