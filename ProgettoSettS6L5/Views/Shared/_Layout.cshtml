@@ -21,6 +21,26 @@
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Informazioni", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Contatto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+                    <!-- Admin page link  -->
+                    <li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Pagina Admin", "Index", "Admin")
+                        }
+                    </li>
+
+                    <!-- logout button -->
+                    <li class="ms-auto">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            using (Html.BeginForm("Logout", "Auth"))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-danger">Logout</button>
+                            }
+                        }
+                    </li>
                 </ul>
             </div>
         </div>
