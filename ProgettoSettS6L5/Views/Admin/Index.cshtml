@@ -13,7 +13,7 @@
             @Html.ActionLink("Registra Utente e Prenotazione", "AggiungiUtenteEPrenotazione", null, new { @class = "btn btn-info" })
             @Html.ActionLink("Aggiungi Servizi", "AggiungiServizi", null, new { @class = "btn btn-warning" })
         </div>
-        <p><em>Aggiungi solo Cliente o solo Prenotazione</em></p>
+        <p class="mt-2"><em>Aggiungi solo Cliente o solo Prenotazione</em></p>
         <div class="btn-group">
             @Html.ActionLink("Aggiungi Cliente", "AggiungiUtente", null, new { @class = "btn btn-info" })
             @Html.ActionLink("Aggiungi Prenotazione", "AggiungiPrenotazione", null, new { @class = "btn btn-warning" })
@@ -22,10 +22,10 @@
     </div>
 </div>
 
-<div class="row mt-5">
+<div class="row mt-2">
     <div class="col-md-4">
 
-        <h3 class="mb-5">Chekout Clienti</h3>
+        <h3 class="mb-1">Chekout Clienti</h3>
 
         @using (Html.BeginForm())
         {
@@ -40,7 +40,7 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="selectIdPrenotazione">Scegli una prenotazione:</label>
                 <select name="selectIdPrenotazione" id="selectPrenotazione" class="form-control">
                     <option value="">-- Seleziona Prenotazione --</option>

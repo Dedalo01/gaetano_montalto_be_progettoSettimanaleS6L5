@@ -26,7 +26,7 @@
                     <li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @Html.ActionLink("Pagina Admin", "Index", "Admin", htmlAttributes: new {@class = "nav-link"} )
+                            @Html.ActionLink("Pagina Admin", "Index", "Admin", new { area = "" }, new {@class = "nav-link"} )
                         }
                     </li>
 
