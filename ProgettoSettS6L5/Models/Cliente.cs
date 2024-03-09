@@ -6,6 +6,7 @@ namespace ProgettoSettS6L5.Models
     {
         [Key]
         [StringLength(16, MinimumLength = 16, ErrorMessage = "Il codice fiscale deve essere di 16 caratteri.")]
+        [Display(Name = "Codice Fiscale")]
         public string CodiceFiscale { get; set; }
         [Required]
         public string Cognome { get; set; }

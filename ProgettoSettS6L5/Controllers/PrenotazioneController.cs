@@ -16,7 +16,7 @@ namespace ProgettoSettS6L5.Controllers
         }
 
         [HttpPost]
-        public ActionResult RegistraUtenteEPrenotazione(RegistraClientePrenotazione clienteEprenotazione, int numeroCameraId)
+        public ActionResult RegistraUtenteEPrenotazione(RegistraClientePrenotazione clienteEprenotazione, int numeroCameraId, string tipoDiServizio)
         {
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
             SqlConnection conn = new SqlConnection(connString);
@@ -67,7 +67,7 @@ namespace ProgettoSettS6L5.Controllers
                     insertPrenotazioneCmd.Parameters.AddWithValue("periodoSoggiornoFine", clienteEprenotazione.Prenotazione.PeriodoSoggiornoFine);
                     insertPrenotazioneCmd.Parameters.AddWithValue("caparra", clienteEprenotazione.Prenotazione.Caparra);
                     insertPrenotazioneCmd.Parameters.AddWithValue("tariffaApplicata", clienteEprenotazione.Prenotazione.TariffaApplicata);
-                    insertPrenotazioneCmd.Parameters.AddWithValue("dettagliPrenotazione", clienteEprenotazione.Prenotazione.DettagliPrenotazione);
+                    insertPrenotazioneCmd.Parameters.AddWithValue("dettagliPrenotazione", tipoDiServizio);
                     insertPrenotazioneCmd.Parameters.AddWithValue("numeroCameraId", numeroCameraId);
 
                     int nRowsPrenotazione = insertPrenotazioneCmd.ExecuteNonQuery();
@@ -172,7 +172,7 @@ namespace ProgettoSettS6L5.Controllers
         }
 
         [HttpPost]
-        public ActionResult RegistraPrenotazione(Prenotazione prenotazione, string codiceFiscale, int numeroCameraId)
+        public ActionResult RegistraPrenotazione(Prenotazione prenotazione, string codiceFiscale, int numeroCameraId, string tipoDiServizio)
         {
 
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
@@ -204,7 +204,7 @@ namespace ProgettoSettS6L5.Controllers
                 insertPrenotazioneCmd.Parameters.AddWithValue("periodoSoggiornoFine", prenotazione.PeriodoSoggiornoFine);
                 insertPrenotazioneCmd.Parameters.AddWithValue("caparra", prenotazione.Caparra);
                 insertPrenotazioneCmd.Parameters.AddWithValue("tariffaApplicata", prenotazione.TariffaApplicata);
-                insertPrenotazioneCmd.Parameters.AddWithValue("dettagliPrenotazione", prenotazione.DettagliPrenotazione);
+                insertPrenotazioneCmd.Parameters.AddWithValue("dettagliPrenotazione", tipoDiServizio); //  prenotazione.DettagliPrenotazione
                 insertPrenotazioneCmd.Parameters.AddWithValue("numeroCameraId", numeroCameraId);
 
                 int nRowsPrenotazione = insertPrenotazioneCmd.ExecuteNonQuery();

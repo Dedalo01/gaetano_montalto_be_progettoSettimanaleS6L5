@@ -5,8 +5,8 @@
 }
 @model ProgettoSettS6L5.Models.Servizio
 
-<div class="container col-md-12 d-flex align-items-center justify-content-center flex-column text-center">
-    <h2 class="mb-3">Aggiungi Servizi al Cliente</h2>
+<div class="container mt-2">
+    <h2 class="text-center mb-4">Aggiungi Servizi al Cliente</h2>
 
     @if (TempData["IsSuccess"] != null)
     {
@@ -16,56 +16,49 @@
         </div>
     }
 
-    @using (Html.BeginForm("RegistraServizoPerCliente", "Prenotazione", FormMethod.Post, new { @class = "form" }))
+    @using (Html.BeginForm("RegistraServizoPerCliente", "Prenotazione"))
     {
-
-        <div class="form-group mt-2">
-            <label class="form-label" for="idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
-            <select name="idPrenotazione" class="form-control">
-                <option value="">-- Seleziona Codice Fiscale --</option>
-                @foreach (var prenotazione in ViewBag.Prenotazioni)
-                {
-                    <option value="@prenotazione.Id" data-codiceFiscale="@prenotazione.CodiceFiscaleCliente">@prenotazione.CodiceFiscaleCliente</option>
-                }
-            </select>
+        <div class="row my-5">
+            <div class="col-md-12 d-flex align-items-center justify-content-center flex-column">
+               
+                    <label class="form-label mt-2" for="idPrenotazione">Scegli un utente attraverso il suo Codice Fiscale:</label>
+                    <select name="idPrenotazione" class="form-control">
+                        <option value="">-- Seleziona Codice Fiscale --</option>
+                        @foreach (var prenotazione in ViewBag.Prenotazioni)
+                        {
+                            <option value="@prenotazione.Id" data-codiceFiscale="@prenotazione.CodiceFiscaleCliente">@prenotazione.CodiceFiscaleCliente</option>
+                        }
+                    </select>
+              
+                    <label class="form-label mt-2" for="selectIdPrenotazione">Scegli una sua Prenotazione:</label>
+                    <select name="selectIdPrenotazione" id="selectPrenotazione" class="form-control">
+                        <option value="">-- Seleziona Prenotazione --</option>
+                    </select>
+                
+                    @Html.LabelFor(model => model.Tipologia, new { @class = "form-label mt-2" })
+                    <select name="tipoDiServizio" class="form-control">
+                        <option value="Colazione in Camera">Colazione in Camera</option>
+                        <option value="Bevande e Cibo Minibar">Bevande e Cibo Minibar</option>
+                        <option value="Internet">Internet</option>
+                        <option value="Letto Aggiuntivo">Letto Aggiuntivo</option>
+                        <option value="Pernottamento con Prima Colazione">Pernottamento con Prima Colazione</option>
+                        <option value="culla">culla</option>
+                    </select>
+                
+                    @Html.LabelFor(model => model.Quantita, new { @class = "form-label mt-2" })
+                    @Html.EditorFor(model => model.Quantita, new { htmlAttributes = new { @class = "form-control" } })
+             
+                    @Html.LabelFor(model => model.Prezzo, new { @class = "form-label mt-2" })
+                    @Html.EditorFor(model => model.Prezzo, new { htmlAttributes = new { @class = "form-control" } })
+               
+                    @Html.LabelFor(model => model.Data, new { @class = "form-label mt-2" })
+                    @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                
+            </div>
         </div>
-
-        <div class="form-group mt-2">
-            <label class="form-label" for="selectIdPrenotazione">Scegli una sua Prenotazione:</label>
-            <select name="selectIdPrenotazione" id="selectPrenotazione" class="form-control">
-                <option value="">-- Seleziona Prenotazione --</option>
-            </select>
+        <div class="my-5 text-center">
+            <button type="submit" class="btn btn-primary my-5 btn-lg">Aggiungi Servizio</button>
         </div>
-
-        <div class="form-group mt-2">
-            @Html.LabelFor(model => model.Tipologia , new { @class = "form-label" })
-            <select name="tipoDiServizio" class="form-control">
-                <option value="Colazione in Camera">Colazione in Camera</option>
-                <option value="Bevande e Cibo Minibar">Bevande e Cibo Minibar</option>
-                <option value="Internet">Internet</option>
-                <option value="Letto Aggiuntivo">Letto Aggiuntivo</option>
-                <option value="Pernottamento con Prima Colazione">Pernottamento con Prima Colazione</option>
-                <option value="culla">culla</option>
-            </select>
-        </div>
-
-        <div class="form-group mt-2">
-            @Html.LabelFor(model => model.Quantita, new {@class = "form-label"})
-            @Html.EditorFor(model => model.Quantita, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-
-        <div class="form-group mt-2">
-            @Html.LabelFor(model => model.Prezzo, new { @class = "form-label" })
-            @Html.EditorFor(model => model.Prezzo, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-
-        <div class="form-group mt-2">
-            @Html.LabelFor(model => model.Data, new { @class = "form-label" })
-            @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-        </div>
-
-        <button type="submit" class="btn btn-primary my-5 btn-lg">Aggiungi Servizio</button>
-
     }
 </div>
 
