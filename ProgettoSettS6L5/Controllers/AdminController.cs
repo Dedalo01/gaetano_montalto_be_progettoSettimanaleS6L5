@@ -186,6 +186,8 @@ namespace ProgettoSettS6L5.Controllers
             }
             return View();
         }
+
+
         public ActionResult AggiungiPrenotazione()
         {
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
@@ -245,6 +247,81 @@ namespace ProgettoSettS6L5.Controllers
 
             return View();
         }
+
+        [HttpPost]
+        public ActionResult AggiungiPrenotazione(Prenotazione prenotazione, string codiceFiscale, int numeroCameraId, string tipoDiServizio)
+        {
+            if (ModelState.IsValid)
+            {
+                TempData["Prenotazione"] = prenotazione;
+                TempData["CodiceFiscale"] = codiceFiscale;
+                TempData["NumeroCameraId"] = numeroCameraId;
+                TempData["TipoDiServizio"] = tipoDiServizio;
+
+                return RedirectToAction("RegistraPrenotazione", "Prenotazione");
+            }
+            else
+            {
+
+                string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
+                SqlConnection conn = new SqlConnection(connString);
+
+                List<Camera> camere = new List<Camera>();
+                List<Cliente> clienti = new List<Cliente>();
+
+                try
+                {
+                    conn.Open();
+                    string selectAllCameraQuery = "SELECT IdNumeroCamera FROM Camere";
+                    SqlCommand selectAllCameraCmd = new SqlCommand(selectAllCameraQuery, conn);
+
+                    SqlDataReader allCameraReader = selectAllCameraCmd.ExecuteReader();
+
+                    if (allCameraReader.HasRows)
+                    {
+                        while (allCameraReader.Read())
+                        {
+                            Camera camera = new Camera();
+                            camera.IdNumeroCamera = (int)allCameraReader["IdNumeroCamera"];
+
+                            camere.Add(camera);
+                        }
+                        ViewBag.Camere = camere;
+
+                    }
+                    allCameraReader.Close();
+
+                    string selectAllCodiceFiscaleQuery = "SELECT CodiceFiscale, Nome, Cognome FROM Clienti";
+                    SqlCommand selectCmd = new SqlCommand(selectAllCodiceFiscaleQuery, conn);
+
+                    SqlDataReader selectReader = selectCmd.ExecuteReader();
+                    if (selectReader.HasRows)
+                    {
+                        while (selectReader.Read())
+                        {
+                            Cliente cliente = new Cliente();
+                            cliente.CodiceFiscale = (string)selectReader["CodiceFiscale"];
+                            cliente.Cognome = (string)selectReader["Cognome"];
+                            cliente.Nome = (string)selectReader["Nome"];
+
+                            clienti.Add(cliente);
+                        }
+                        selectReader.Close();
+                        ViewBag.Clienti = clienti;
+                        return View();
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                finally { conn.Close(); }
+            }
+
+
+            return View();
+        }
+
         public ActionResult AggiungiServizi()
         {
             //carica utenti in qualche modo nella view

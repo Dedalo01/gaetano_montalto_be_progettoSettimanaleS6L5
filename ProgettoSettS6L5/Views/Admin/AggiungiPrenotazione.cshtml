@@ -17,7 +17,7 @@
     }
 
 
-    @using (Html.BeginForm("RegistraPrenotazione", "Prenotazione"))
+    @using (Html.BeginForm())
     {
         <div class="row my-5">
 
@@ -41,18 +41,23 @@
 
                 @Html.LabelFor(model => model.DataPrenotazione, new { @class = "form-label mt-2" })
                 @Html.EditorFor(model => model.DataPrenotazione, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
+                @Html.ValidationMessageFor(model => model.DataPrenotazione, "", new { @class = "text-danger" })
 
                 @Html.LabelFor(model => model.PeriodoSoggiornoInizio, new { @class = "form-label mt-2" })
                 @Html.EditorFor(model => model.PeriodoSoggiornoInizio, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
+                @Html.ValidationMessageFor(model => model.PeriodoSoggiornoInizio, "", new { @class = "text-danger" })
 
                 @Html.LabelFor(model => model.PeriodoSoggiornoFine, new { @class = "form-label mt-2" })
                 @Html.EditorFor(model => model.PeriodoSoggiornoFine, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
+                @Html.ValidationMessageFor(model => model.PeriodoSoggiornoFine, "", new { @class = "text-danger" })
 
                 @Html.LabelFor(model => model.Caparra, new { @class = "form-label mt-2" })
                 @Html.EditorFor(model => model.Caparra, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Caparra, "", new { @class = "text-danger" })
 
                 @Html.LabelFor(model => model.TariffaApplicata, new { @class = "form-label mt-2" })
                 @Html.EditorFor(model => model.TariffaApplicata, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TariffaApplicata, "", new { @class = "text-danger" })
 
                 @*@Html.LabelFor(model => model.DettagliPrenotazione, new { @class = "form-label mt-2" })
         @Html.EditorFor(model => model.DettagliPrenotazione, new { htmlAttributes = new { @class = "form-control" } })*@
@@ -63,6 +68,7 @@
                     <option value="Pensione Completa">Pensione Completa</option>
                     <option value="Pernottamento con Prima Colazione">Pernottamento con Prima Colazione</option>
                 </select>
+                @Html.ValidationMessageFor(model => model.DettagliPrenotazione, "", new { @class = "text-danger" })
 
                 <!-- foreach per le camere -->
                 @Html.LabelFor(model => model.NumeroCameraId, new { @class = "form-label" })
@@ -72,6 +78,7 @@
                         <option value="@camera.IdNumeroCamera">@camera.IdNumeroCamera</option>
                     }
                 </select>
+                @Html.ValidationMessageFor(model => model.NumeroCameraId, "", new { @class = "text-danger" })
             </div>
         </div>
 

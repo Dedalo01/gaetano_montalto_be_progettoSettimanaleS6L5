@@ -174,9 +174,14 @@ namespace ProgettoSettS6L5.Controllers
             return RedirectToAction("AggiungiUtente", "Admin", cliente);
         }
 
-        [HttpPost]
-        public ActionResult RegistraPrenotazione(Prenotazione prenotazione, string codiceFiscale, int numeroCameraId, string tipoDiServizio)
+
+        public ActionResult RegistraPrenotazione()
         {
+
+            Prenotazione prenotazione = TempData["Prenotazione"] as Prenotazione;
+            string codiceFiscale = (string)TempData["CodiceFiscale"];
+            int numeroCameraId = (int)TempData["NumeroCameraId"];
+            string tipoDiServizio = (string)TempData["TipoDiServizio"];
 
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
             SqlConnection conn = new SqlConnection(connString);
