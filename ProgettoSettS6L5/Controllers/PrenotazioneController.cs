@@ -133,6 +133,8 @@ namespace ProgettoSettS6L5.Controllers
             return View();
         }
 
+
+
         [HttpPost]
         public JsonResult GetAllPrenotazioniByCodiceFiscale(string codiceFiscale)
         {
