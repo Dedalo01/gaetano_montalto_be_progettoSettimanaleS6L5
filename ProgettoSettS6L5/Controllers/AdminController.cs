@@ -16,12 +16,13 @@ namespace ProgettoSettS6L5.Controllers
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
             SqlConnection conn = new SqlConnection(connString);
             List<Prenotazione> prenotazioni = new List<Prenotazione>();
+            List<Cliente> clienti = new List<Cliente>();
 
             try
             {
                 conn.Open();
 
-                string selectFromPrenotazioniQuery = "SELECT Id, CodiceFiscaleCliente FROM Prenotazioni";
+                string selectFromPrenotazioniQuery = "SELECT CodiceFiscale, Cognome, Nome FROM Clienti";
                 SqlCommand selectFromPrenotazioniCmd = new SqlCommand(selectFromPrenotazioniQuery, conn);
 
                 SqlDataReader selectReader = selectFromPrenotazioniCmd.ExecuteReader();
@@ -30,16 +31,24 @@ namespace ProgettoSettS6L5.Controllers
                 {
                     while (selectReader.Read())
                     {
-                        Prenotazione prenotazione = new Prenotazione();
-                        prenotazione.Id = (int)selectReader["Id"];
-                        prenotazione.CodiceFiscaleCliente = selectReader["CodiceFiscaleCliente"].ToString();
+                        Cliente cliente = new Cliente();
+                        cliente.CodiceFiscale = (string)selectReader["CodiceFiscale"];
+                        cliente.Cognome = (string)selectReader["Cognome"];
+                        cliente.Nome = (string)selectReader["Nome"];
 
-                        prenotazioni.Add(prenotazione);
+                        clienti.Add(cliente);
+
+                        //Prenotazione prenotazione = new Prenotazione();
+                        //prenotazione.Id = (int)selectReader["Id"];
+                        //prenotazione.CodiceFiscaleCliente = selectReader["CodiceFiscaleCliente"].ToString();
+
+                        //prenotazioni.Add(prenotazione);
                     }
 
                     selectReader.Close();
 
-                    ViewBag.Prenotazioni = prenotazioni;
+                    //ViewBag.Prenotazioni = prenotazioni;
+                    ViewBag.Clienti = clienti;
                     return View();
                 }
             }

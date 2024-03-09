@@ -31,11 +31,19 @@
         {
             <div class="form-group">
                 <label for="idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
-                <select name="idPrenotazione" class="form-control">
+                @*<select name="idPrenotazione" class="form-control">
                     <option value="" data-codiceFiscale="">-- Seleziona Codice Fiscale --</option>
                     @foreach (var prenotazione in ViewBag.Prenotazioni)
                     {
                         <option value="@prenotazione.Id" data-codiceFiscale="@prenotazione.CodiceFiscaleCliente">@prenotazione.CodiceFiscaleCliente</option>
+                    }
+                </select>*@
+
+                <select name="idPrenotazione" class="form-control">
+                    <option value="" data-codiceFiscale="">-- Seleziona Codice Fiscale --</option>
+                    @foreach (var cliente in ViewBag.Clienti)
+                    {
+                        <option value="@cliente.CodiceFiscale" data-codiceFiscale="@cliente.CodiceFiscale">@cliente.CodiceFiscale - @cliente.Cognome - @cliente.Nome</option>
                     }
                 </select>
             </div>
