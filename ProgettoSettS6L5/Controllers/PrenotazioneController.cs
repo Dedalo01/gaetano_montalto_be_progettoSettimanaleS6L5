@@ -133,7 +133,94 @@ namespace ProgettoSettS6L5.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult RegistraCliente(Cliente cliente)
+        {
+            string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
+            SqlConnection conn = new SqlConnection(connString);
 
+            try
+            {
+                conn.Open();
+                string insertClienteGetCFQuery = @"INSERT INTO Clienti (CodiceFiscale, Cognome, Nome, Citta, Provincia, Email, Telefono, Cellulare)
+                    VALUES (@codiceFiscale, @cognome, @nome, @citta, @provincia, @email, @tel, @cel);
+                    ";
+
+                SqlCommand insertClienteCmd = new SqlCommand(insertClienteGetCFQuery, conn);
+                insertClienteCmd.Parameters.AddWithValue("codiceFiscale", cliente.CodiceFiscale);
+                insertClienteCmd.Parameters.AddWithValue("cognome", cliente.Cognome);
+                insertClienteCmd.Parameters.AddWithValue("nome", cliente.Nome);
+                insertClienteCmd.Parameters.AddWithValue("citta", cliente.Citta);
+                insertClienteCmd.Parameters.AddWithValue("provincia", cliente.Provincia);
+                insertClienteCmd.Parameters.AddWithValue("email", cliente.Email);
+                insertClienteCmd.Parameters.AddWithValue("tel", cliente.Telefono);
+                insertClienteCmd.Parameters.AddWithValue("cel", cliente.Cellulare);
+
+
+                int nRowsCliente = insertClienteCmd.ExecuteNonQuery();
+
+                if (nRowsCliente > 0)
+                {
+                    TempData["IsSuccess"] = "Il Cliente è stato aggiunto correttamente.";
+                    return RedirectToAction("AggiungiUtente", "Admin");
+                }
+            }
+            catch (Exception ex) { }
+            finally { conn.Close(); }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult RegistraPrenotazione(Prenotazione prenotazione, string codiceFiscale, int numeroCameraId)
+        {
+
+            string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
+            SqlConnection conn = new SqlConnection(connString);
+
+            try
+            {
+                conn.Open();
+                int annoCorrente = prenotazione.DataPrenotazione.Year;
+
+                // Ottieni numero progressivo
+                string getNumeroProgressivoQuery = @"SELECT ISNULL(MAX(NumeroProgressivo),0) + 1
+                        FROM Prenotazioni WHERE Anno = @annoCorrente
+                        ";
+                SqlCommand getNumeroProgressivoCmd = new SqlCommand(getNumeroProgressivoQuery, conn);
+                getNumeroProgressivoCmd.Parameters.AddWithValue("annoCorrente", annoCorrente);
+
+                int nuovoNumeroProgressivo = (int)getNumeroProgressivoCmd.ExecuteScalar();
+
+                string insertPrenotazioneQuery = @"INSERT INTO Prenotazioni (CodiceFiscaleCliente, DataPrenotazione, NumeroProgressivo, Anno, PeriodoSoggiornoInizio, PeriodoSoggiornoFine, Caparra, TariffaApplicata, DettagliPrenotazione, NumeroCameraId)
+                        VALUES (@codFisCliente, @dataPrenotazione, @numeroProgressivo, @anno, @periodoSoggiornoInizio, @periodoSoggiornoFine, @caparra, @tariffaApplicata, @dettagliPrenotazione, @numeroCameraId)
+                        ";
+                SqlCommand insertPrenotazioneCmd = new SqlCommand(insertPrenotazioneQuery, conn);
+                insertPrenotazioneCmd.Parameters.AddWithValue("codFisCliente", codiceFiscale);
+                insertPrenotazioneCmd.Parameters.AddWithValue("dataPrenotazione", prenotazione.DataPrenotazione);
+                insertPrenotazioneCmd.Parameters.AddWithValue("numeroProgressivo", nuovoNumeroProgressivo);
+                insertPrenotazioneCmd.Parameters.AddWithValue("anno", annoCorrente);
+                insertPrenotazioneCmd.Parameters.AddWithValue("periodoSoggiornoInizio", prenotazione.PeriodoSoggiornoInizio);
+                insertPrenotazioneCmd.Parameters.AddWithValue("periodoSoggiornoFine", prenotazione.PeriodoSoggiornoFine);
+                insertPrenotazioneCmd.Parameters.AddWithValue("caparra", prenotazione.Caparra);
+                insertPrenotazioneCmd.Parameters.AddWithValue("tariffaApplicata", prenotazione.TariffaApplicata);
+                insertPrenotazioneCmd.Parameters.AddWithValue("dettagliPrenotazione", prenotazione.DettagliPrenotazione);
+                insertPrenotazioneCmd.Parameters.AddWithValue("numeroCameraId", numeroCameraId);
+
+                int nRowsPrenotazione = insertPrenotazioneCmd.ExecuteNonQuery();
+
+                if (nRowsPrenotazione > 0)
+                {
+                    TempData["IsSuccess"] = "La Prenotazione è stata effettuata correttamente.";
+                    return RedirectToAction("AggiungiPrenotazione", "Admin");
+                }
+
+            }
+            catch { }
+            finally { conn.Close(); }
+
+            return View();
+        }
 
         [HttpPost]
         public JsonResult GetAllPrenotazioniByCodiceFiscale(string codiceFiscale)

@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "AggiungiUtente";
+}
+
+
+
+@model ProgettoSettS6L5.Models.Cliente
+
+<div class="container mt-2">
+    <h2 class="text-center mb-4">Aggiungi Utente E Prenotazione</h2>
+
+    @if (TempData["IsSuccess"] != null)
+    {
+        <div class="my-5 alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Successo!</strong> @TempData["IsSuccess"].
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+
+    @using (Html.BeginForm("RegistraCliente", "Prenotazione"))
+    {
+        <div class="row my-5">
+            <div class="col-md-12 d-flex align-items-center justify-content-center flex-column">
+                <h3 class="fw-bold">Inserisci dati del Cliente:</h3>
+
+                @Html.LabelFor(model => model.Email, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.LabelFor(model => model.Nome, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.LabelFor(model => model.Cognome, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.Cognome, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.LabelFor(model => model.CodiceFiscale, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.CodiceFiscale, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.LabelFor(model => model.Citta, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.Citta, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.LabelFor(model => model.Provincia, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.Provincia, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.LabelFor(model => model.Telefono, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="my-5 text-center">
+            <button class="btn btn-primary btn-lg p-3">Registra Cliente</button>
+        </div>
+    }
+</div>

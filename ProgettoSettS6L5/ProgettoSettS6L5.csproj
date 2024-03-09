@@ -189,6 +189,8 @@
     <Content Include="Views\Admin\AggiungiUtenteEPrenotazione.cshtml" />
     <Content Include="Views\Admin\AggiungiServizi.cshtml" />
     <Content Include="Views\Admin\Checkout.cshtml" />
+    <Content Include="Views\Admin\AggiungiUtente.cshtml" />
+    <Content Include="Views\Admin\AggiungiPrenotazione.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

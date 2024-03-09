@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "AggiungiPrenotazione";
+}
+
+@model ProgettoSettS6L5.Models.Prenotazione
+
+<div class="container mt-2">
+    <h2 class="text-center mb-4">Aggiungi Utente E Prenotazione</h2>
+
+    @if (TempData["IsSuccess"] != null)
+    {
+        <div class="my-5 alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Successo!</strong> @TempData["IsSuccess"].
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+
+    @using (Html.BeginForm("RegistraPrenotazione", "Prenotazione"))
+    {
+        <div class="row my-5">
+
+            <div class="col-md-4">
+                <h3 class="mb-5">Chekout Clienti</h3>
+                    <div class="form-group">
+                        <label for="codiceFiscale">Scegli un utente attraverso il suo Codice Fiscale:</label>
+                        <select name="codiceFiscale" class="form-control">
+                            <option value="">-- Seleziona Codice Fiscale --</option>
+                            @foreach (var cliente in ViewBag.Clienti)
+                            {
+                                <option value="@cliente.CodiceFiscale">@cliente.CodiceFiscale - @cliente.Cognome @cliente.Nome</option>
+                            }
+                        </select>
+                    </div>
+            </div>
+
+
+            <div class="col-md-8 d-flex align-items-center justify-content-center flex-column">
+                <h3 class="fw-bold">Inserisci dati della Prenotazione:</h3>
+
+                @Html.LabelFor(model => model.DataPrenotazione, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.DataPrenotazione, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
+
+                @Html.LabelFor(model => model.PeriodoSoggiornoInizio, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.PeriodoSoggiornoInizio, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
+
+                @Html.LabelFor(model => model.PeriodoSoggiornoFine, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.PeriodoSoggiornoFine, new { htmlAttributes = new { @class = "form-control", @type = "datetime-local" } })
+
+                @Html.LabelFor(model => model.Caparra, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.Caparra, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.LabelFor(model => model.TariffaApplicata, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.TariffaApplicata, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.LabelFor(model => model.DettagliPrenotazione, new { @class = "form-label mt-2" })
+                @Html.EditorFor(model => model.DettagliPrenotazione, new { htmlAttributes = new { @class = "form-control" } })
+
+                <!-- foreach per le camere -->
+                @Html.LabelFor(model => model.NumeroCameraId, new { @class = "form-label" })
+                <select name="numeroCameraId" class="form-select">
+                    @foreach (var camera in ViewBag.Camere)
+                    {
+                        <option value="@camera.IdNumeroCamera">@camera.IdNumeroCamera</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="my-5 text-center">
+            <button class="btn btn-primary btn-lg p-3">Registra Prenotazione</button>
+        </div>
+    }
+</div>
+
+
