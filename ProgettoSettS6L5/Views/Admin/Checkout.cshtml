@@ -3,59 +3,59 @@
     ViewBag.Title = "Checkout";
 }
 
-<h2>Checkout</h2>
+<h2 class="text-center">Checkout</h2>
 
-<section>
-
-    <h3>Dettagli Prenotazione</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Numero Stanza</th>
-                <th>Da</th>
-                <th>A</th>
-                <th>Tariffa Giornaliera</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                <td>@ViewBag.Prenotazione.Id</td>
-                <td>@ViewBag.Prenotazione.NumeroCameraId</td>
-                <td>@ViewBag.Prenotazione.PeriodoSoggiornoInizio.ToShortDateString()</td>
-                <td>@ViewBag.Prenotazione.PeriodoSoggiornoFine.ToShortDateString()</td>
-                <td>@ViewBag.Prenotazione.TariffaApplicata</td>
-            </tr>
-        </tbody>
-    </table>
-</section>
-
-<section>
-    <h3>Dettagli Servizi</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Tipologia</th>
-                <th>Quantità Totale</th>
-                <th>Prezzo Totale</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var servizio in ViewBag.ListaServizi)
-            {
+<div class="container mt-5">
+    <section>
+        <h3>Dettagli Prenotazione</h3>
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>@servizio.Tipologia</td>
-                    <td>@servizio.TotaleQuantita</td>
-                    <td>@servizio.TotalePrezzo</td>
+                    <th>#</th>
+                    <th>Numero Stanza</th>
+                    <th>Da</th>
+                    <th>A</th>
+                    <th>Tariffa Giornaliera</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</section>
+            </thead>
 
-<section class="text-lg-end">
-    <p ><strong>Totale Conto:</strong> @ViewBag.ImportoTotale €</p>
-</section>
+            <tbody>
+                <tr>
+                    <td>@ViewBag.Prenotazione.Id</td>
+                    <td>@ViewBag.Prenotazione.NumeroCameraId</td>
+                    <td>@ViewBag.Prenotazione.PeriodoSoggiornoInizio.ToShortDateString()</td>
+                    <td>@ViewBag.Prenotazione.PeriodoSoggiornoFine.ToShortDateString()</td>
+                    <td>@ViewBag.Prenotazione.TariffaApplicata</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 
+    <section class="mt-4">
+        <h3>Dettagli Servizi</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tipologia</th>
+                    <th>Quantità Totale</th>
+                    <th>Prezzo Totale</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var servizio in ViewBag.ListaServizi)
+                {
+                    <tr>
+                        <td>@servizio.Tipologia</td>
+                        <td>@servizio.TotaleQuantita</td>
+                        <td>@servizio.TotalePrezzo</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+
+    <section class="text-md-end mt-4">
+        <p class="h4"><strong>Totale Conto:</strong> @ViewBag.ImportoTotale €</p>
+    </section>
+</div>

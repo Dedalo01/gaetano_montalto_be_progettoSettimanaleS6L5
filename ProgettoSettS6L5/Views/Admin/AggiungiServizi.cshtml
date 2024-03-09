@@ -5,58 +5,118 @@
 }
 @model ProgettoSettS6L5.Models.Servizio
 
-<h2>Aggiungi Servizi al Cliente</h2>
+<div class="container d-flex flex-column align-items-center justify-content-center text-center">
+    <h2 class="mb-3">Aggiungi Servizi al Cliente</h2>
 
-@if (TempData["IsSuccess"] != null)
-{
-    <div class="my-5 alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Successo!</strong> @TempData["IsSuccess"].
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    @if (TempData["IsSuccess"] != null)
+    {
+        <div class="my-5 alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Successo!</strong> @TempData["IsSuccess"].
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @using (Html.BeginForm("RegistraServizoPerCliente", "Prenotazione", FormMethod.Post, new { @class = "form" }))
+    {
+
+        <div class="form-group mt-2">
+            <label class="form-label" for="idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
+            <select name="idPrenotazione" class="form-control">
+                <option value="">-- Seleziona Codice Fiscale --</option>
+                @foreach (var prenotazione in ViewBag.Prenotazioni)
+                {
+                    <option value="@prenotazione.Id" data-codiceFiscale="@prenotazione.CodiceFiscaleCliente">@prenotazione.CodiceFiscaleCliente</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group mt-2">
+            <label class="form-label" for="selectIdPrenotazione">Scegli una sua Prenotazione:</label>
+            <select name="selectIdPrenotazione" id="selectPrenotazione" class="form-control">
+                <option value="">-- Seleziona Prenotazione --</option>
+            </select>
+        </div>
+
+        <div class="form-group mt-2">
+            @Html.LabelFor(model => model.Tipologia , new { @class = "form-label" })
+            <select name="tipoDiServizio" class="form-control">
+                <option value="Colazione in Camera">Colazione in Camera</option>
+                <option value="Bevande e Cibo Minibar">Bevande e Cibo Minibar</option>
+                <option value="Internet">Internet</option>
+                <option value="Letto Aggiuntivo">Letto Aggiuntivo</option>
+                <option value="Pernottamento con Prima Colazione">Pernottamento con Prima Colazione</option>
+                <option value="culla">culla</option>
+            </select>
+        </div>
+
+        <div class="form-group mt-2">
+            @Html.LabelFor(model => model.Quantita, new {@class = "form-label"})
+            @Html.EditorFor(model => model.Quantita, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <div class="form-group mt-2">
+            @Html.LabelFor(model => model.Prezzo, new { @class = "form-label" })
+            @Html.EditorFor(model => model.Prezzo, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <div class="form-group mt-2">
+            @Html.LabelFor(model => model.Data, new { @class = "form-label" })
+            @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+        </div>
+
+        <button type="submit" class="btn btn-primary my-5 btn-lg">Aggiungi Servizio</button>
+
+    }
+</div>
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+
+            // rilevo il cambio nella select
+            $('select[name="idPrenotazione"]').on('change', function () {
+                var idPrenotazione = $(this).val();
+                var codiceFiscale = $('option:selected', this).data('codicefiscale');
+
+                // resetto ogni volta la select
+                var selectPrenotazione = $('#selectPrenotazione');
+                selectPrenotazione.empty();
+                selectPrenotazione.append('<option value="">-- Seleziona Prenotazione --</option>');
+
+
+
+                // sparo la fetch
+                $.ajax({
+                    url: '@Url.Action("GetAllPrenotazioniByCodiceFiscale", "Prenotazione")',
+                    type: 'POST',
+                    data: { codiceFiscale: codiceFiscale },
+                    success: function (data) {
+                        // popolo select
+                        $.each(data, function (index, prenotazione) {
+                            console.log(prenotazione.DataPrenotazione)
+                            var timestampPrenotazione = parseInt(prenotazione.DataPrenotazione.match(/\d+/)[0], 10);
+                            var timestampInizio = parseInt(prenotazione.PeriodoSoggiornoInizio.match(/\d+/)[0], 10);
+                            var timestampFine = parseInt(prenotazione.PeriodoSoggiornoFine.match(/\d+/)[0], 10);
+
+                            var dataPrenotazione = new Date(timestampPrenotazione)
+                            var dataInizio = new Date(timestampInizio)
+                            var dataFine = new Date(timestampFine)
+
+                            // popolo la select
+                            selectPrenotazione.append(`<option value="${prenotazione.Id}">${prenotazione.Id} - ${prenotazione.DettagliPrenotazione} - ${dataPrenotazione.toLocaleDateString("it-IT")}</option>`);
+
+                        });
+
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+
+
+            });
+        });
+
+    </script>
 }
-
-@using (Html.BeginForm("RegistraServizoPerCliente", "Prenotazione"))
-{
-
-    <div>
-        <label for=" idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
-        <select name="idPrenotazione">
-            @foreach (var prenotazione in ViewBag.Prenotazioni)
-            {
-                <option value="@prenotazione.Id">@prenotazione.CodiceFiscaleCliente</option>
-            }
-        </select>
-    </div>
-
-    <div>
-        @Html.LabelFor(model => model.Tipologia)
-        <select name="tipoDiServizio">
-            <option value="Colazione in Camera">Colazione in Camera</option>
-            <option value="Bevande e Cibo Minibar">Bevande e Cibo Minibar</option>
-            <option value="Internet">Internet</option>
-            <option value="Letto Aggiuntivo">Letto Aggiuntivo</option>
-            <option value="Pernottamento con Prima Colazione">Pernottamento con Prima Colazione</option>
-            <option value="culla">culla</option>
-        </select>
-    </div>
-
-    <div>
-        @Html.LabelFor(model => model.Quantita)
-        @Html.EditorFor(model => model.Quantita)
-    </div>
-
-    <div>
-        @Html.LabelFor(model => model.Prezzo)
-        @Html.EditorFor(model => model.Prezzo)
-    </div>
-
-    <div>
-        @Html.LabelFor(model => model.Data)
-        @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @type = "date" } })
-    </div>
-
-
-    <input type="submit" value="Aggiungi Servizio" class="btn btn-primary" />
-
-}
-

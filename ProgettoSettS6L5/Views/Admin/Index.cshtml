@@ -3,43 +3,60 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Benvenuto Dipendente</h2>
+<h2 class="mt-4">Benvenuto Dipendente</h2>
 
-<p>Cosa vuoi fare?</p>
+<div class="row">
+    <div class="col-md-6">
 
-@Html.ActionLink("Registra Utente e Prenotazione", "AggiungiUtenteEPrenotazione")
-@Html.ActionLink("Aggiungi Servizi", "AggiungiServizi")
+        <p><em>Cosa vuoi fare?</em></p>
+        <div class="btn-group">
+            @Html.ActionLink("Registra Utente e Prenotazione", "AggiungiUtenteEPrenotazione",null, new { @class = "btn btn-info" })
+            @Html.ActionLink("Aggiungi Servizi", "AggiungiServizi",null, new { @class = "btn btn-warning" })
+        </div>
+
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+
+        <h3 class="mb-5">Chekout Clienti</h3>
+
+        @using (Html.BeginForm())
+        {
+            <div class="form-group">
+                <label for="idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
+                <select name="idPrenotazione" class="form-control">
+                    <option value="" data-codiceFiscale="">-- Seleziona Codice Fiscale --</option>
+                    @foreach (var prenotazione in ViewBag.Prenotazioni)
+                    {
+                        <option value="@prenotazione.Id" data-codiceFiscale="@prenotazione.CodiceFiscaleCliente">@prenotazione.CodiceFiscaleCliente</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="selectIdPrenotazione">Scegli una prenotazione:</label>
+                <select name="selectIdPrenotazione" id="selectPrenotazione" class="form-control">
+                    <option value="">-- Seleziona Prenotazione --</option>
+                </select>
+            </div>
+
+            <button id="checkoutBtn" class="btn btn-success mt-3">Vai al Checkout</button>
+        }
+
+    </div>
 
 
-<section>
-    <h3>Chekout Clienti</h3>
+    <div class="col-md-6">
+        <section id="dettagliPrenotazione">
+        </section>
+    </div>
 
-    @using (Html.BeginForm())
-    {
-        <label for="idPrenotazione">Scegli un utente attraverso il suo codice fiscale:</label>
-        <select name="idPrenotazione">
-            <option value="" data-codiceFiscale="">-- Seleziona Codice Fiscale --</option>
-            @foreach (var prenotazione in ViewBag.Prenotazioni)
-            {
-                <option value="@prenotazione.Id" data-codiceFiscale="@prenotazione.CodiceFiscaleCliente">@prenotazione.CodiceFiscaleCliente</option>
-            }
-        </select>
+</div>
 
-        <label for="selectIdPrenotazione">Scegli una prenotazione:</label>
-        <select name="selectIdPrenotazione" id="selectPrenotazione">
-            <option value="">-- Seleziona Prenotazione --</option>
-        </select>
-
-        <button id="checkoutBtn">Vai al Checkout</button>
-    }
-</section>
-
-<section id="dettagliPrenotazione">
-    
-</section>
-
-<section>
-    <p><strong>Totale Prenotazioni Pensione Completa:</strong> <span id="totalePrenotazioniPensioneCompleta"></span></p>
+<section class="col-md-12 mt-5">
+    <p><strong>Totale Prenotazioni "Pensione Completa":</strong> <span id="totalePrenotazioniPensioneCompleta"></span></p>
 </section>
 
 
@@ -48,7 +65,7 @@
     <script>
         $(document).ready(function () {
 
-            
+
 
         // rilevo il cambio nella select
         $('select[name="idPrenotazione"]').on('change', function () {
@@ -60,11 +77,11 @@
             selectPrenotazione.empty();
             selectPrenotazione.append('<option value="">-- Seleziona Prenotazione --</option>');
 
-            
+
 
             if (idPrenotazione == "") {
                 $('#dettagliPrenotazione').html("");
-                
+
             } else {
 
       // sparo la fetch
@@ -74,7 +91,8 @@
                 data: { codiceFiscale: codiceFiscale },
                 success: function (data) {
                     // Creo struttura tabella
-                   var dettagliPrenotazioneHtml = `
+                    var dettagliPrenotazioneHtml = `
+                        <h3>Prenotazioni del Cliente Attuale</h3>
                         <table class="table table-striped my-4">
                             <thead>
                                 <tr>
@@ -106,7 +124,7 @@
                         dettagliPrenotazioneHtml += `
                         <tr>
                             <td>${prenotazione.Id}</td>
-                            <td>${prenotazione.CodiceFicaleCliente}</td>
+                            <td>${codiceFiscale}</td>
                             <td>${dataPrenotazione.toLocaleDateString("it-IT") }</td>
                             <td>${dataInizio.toLocaleDateString("it-IT") }</td>
                             <td>${dataFine.toLocaleDateString("it-IT") }</td>
@@ -126,8 +144,8 @@
 
                     // Aggiorno la section
                     $('#dettagliPrenotazione').html(dettagliPrenotazioneHtml);
-                    
-                    
+
+
                 },
                 error: function (error) {
                     console.error(error);

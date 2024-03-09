@@ -4,30 +4,28 @@
 
 <main>
     <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+        <h1 id="title">Benvenuti a Hotel Smargiasso</h1>
+        <p class="lead">Questo portale è ad esclusivo utilizzo dei dipendenti</p>
     </section>
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
+    <div class="row my-5">
+        <section class="col-md-4" aria-labelledby="memorandum">
+            <h2 id="gettingStartedTitle">Memorandum</h2>
             <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
+                Ricorda sempre di essere gentile e disponibile con i clienti e di non insistere per le mance.
             </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            <p>@Html.ActionLink("Effettua Login »", "Index", "Auth",null,  new { @class = "btn btn-outline-dark" })</p>
+           
         </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        <section class="col-md-4" aria-labelledby="features">
+            <h2 id="librariesTitle">Ora Con Più Funzionalità</h2>
+            <p>Questo nuovo portale per dipendenti mette a disposizione molte più funzionalità di quello precedente, con anche un leggero miglioramento grafico.</p>
+            <p><a class="btn btn-outline-dark" href="#">Scopri più &raquo;</a></p>
         </section>
         <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+            <h2 id="hostingTitle">Per Info</h2>
+            <p>Se c'è qualche richiesta specifica, contattate l'assistenza Dipendenti a questo link. Aprite un nuovo ticket e sperate che vi rispondano.</p>
+            <p><a class="btn btn-outline-dark" href="#">Apri Ticket &raquo;</a></p>
         </section>
     </div>
 </main>

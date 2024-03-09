@@ -92,10 +92,10 @@ namespace ProgettoSettS6L5.Controllers
         }
 
         [HttpPost]
-        public ActionResult RegistraServizoPerCliente(Servizio servizio, int idPrenotazione, string tipoDiServizio)
+        public ActionResult RegistraServizoPerCliente(Servizio servizio, int selectIdPrenotazione, string tipoDiServizio)
         {
             Servizio nuovoServizio = servizio;
-            nuovoServizio.PrenotazioneId = idPrenotazione;
+            nuovoServizio.PrenotazioneId = selectIdPrenotazione;
             nuovoServizio.Tipologia = tipoDiServizio;
 
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
