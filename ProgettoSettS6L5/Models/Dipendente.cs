@@ -6,9 +6,9 @@ namespace ProgettoSettS6L5.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Inserire Username.")]
         public string Username { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Inserire Password.")]
         public string Password { get; set; }
     }
 }

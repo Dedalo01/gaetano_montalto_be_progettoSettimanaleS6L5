@@ -16,6 +16,7 @@ namespace ProgettoSettS6L5.Controllers
             {
                 return RedirectToAction("Index", "Admin");
             }
+
             return View();
         }
 
@@ -25,30 +26,35 @@ namespace ProgettoSettS6L5.Controllers
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
             SqlConnection conn = new SqlConnection(connString);
 
-            try
+            if (ModelState.IsValid)
             {
-                conn.Open();
-                string checkAdminQuery = "SELECT * FROM Dipendenti WHERE Username = @username AND Password = @password";
 
-                SqlCommand checkCmd = new SqlCommand(checkAdminQuery, conn);
-                checkCmd.Parameters.AddWithValue("username", admin.Username);
-                checkCmd.Parameters.AddWithValue("password", admin.Password);
-
-                SqlDataReader checkAdminReader = checkCmd.ExecuteReader();
-
-                if (checkAdminReader.HasRows)
+                try
                 {
-                    checkAdminReader.Read();
-                    FormsAuthentication.SetAuthCookie(checkAdminReader["Id"].ToString(), true);
+                    conn.Open();
+                    string checkAdminQuery = "SELECT * FROM Dipendenti WHERE Username = @username AND Password = @password";
 
-                    return RedirectToAction("Index", "Admin");
+                    SqlCommand checkCmd = new SqlCommand(checkAdminQuery, conn);
+                    checkCmd.Parameters.AddWithValue("username", admin.Username);
+                    checkCmd.Parameters.AddWithValue("password", admin.Password);
+
+                    SqlDataReader checkAdminReader = checkCmd.ExecuteReader();
+
+                    if (checkAdminReader.HasRows)
+                    {
+                        checkAdminReader.Read();
+                        FormsAuthentication.SetAuthCookie(checkAdminReader["Id"].ToString(), true);
+
+                        return RedirectToAction("Index", "Admin");
+                    }
+
                 }
-
+                catch (Exception ex) { }
+                finally { conn.Close(); }
             }
-            catch (Exception ex) { }
-            finally { conn.Close(); }
 
-            return RedirectToAction("Index");
+
+            return View();
         }
 
         [Authorize, HttpPost]

@@ -38,16 +38,12 @@ namespace ProgettoSettS6L5.Controllers
 
                         clienti.Add(cliente);
 
-                        //Prenotazione prenotazione = new Prenotazione();
-                        //prenotazione.Id = (int)selectReader["Id"];
-                        //prenotazione.CodiceFiscaleCliente = selectReader["CodiceFiscaleCliente"].ToString();
 
-                        //prenotazioni.Add(prenotazione);
                     }
 
                     selectReader.Close();
 
-                    //ViewBag.Prenotazioni = prenotazioni;
+
                     ViewBag.Clienti = clienti;
                     return View();
                 }
@@ -139,7 +135,7 @@ namespace ProgettoSettS6L5.Controllers
             }
             finally { conn.Close(); }
 
-            return View();
+
         }
 
         public ActionResult AggiungiUtenteEPrenotazione()
@@ -180,6 +176,16 @@ namespace ProgettoSettS6L5.Controllers
         }
 
         public ActionResult AggiungiUtente() { return View(); }
+        [HttpPost]
+        public ActionResult AggiungiUtente(Cliente cliente)
+        {
+            if (ModelState.IsValid)
+            {
+                TempData["Cliente"] = cliente;
+                return RedirectToAction("RegistraCliente", "Prenotazione");
+            }
+            return View();
+        }
         public ActionResult AggiungiPrenotazione()
         {
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();

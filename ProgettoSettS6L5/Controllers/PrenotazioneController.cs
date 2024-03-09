@@ -133,9 +133,10 @@ namespace ProgettoSettS6L5.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult RegistraCliente(Cliente cliente)
+
+        public ActionResult RegistraCliente()
         {
+            Cliente cliente = TempData["Cliente"] as Cliente;
             string connString = ConfigurationManager.ConnectionStrings["ProgettoSettS6L5"].ToString();
             SqlConnection conn = new SqlConnection(connString);
 
@@ -168,7 +169,9 @@ namespace ProgettoSettS6L5.Controllers
             catch (Exception ex) { }
             finally { conn.Close(); }
 
-            return View();
+
+
+            return RedirectToAction("AggiungiUtente", "Admin", cliente);
         }
 
         [HttpPost]
